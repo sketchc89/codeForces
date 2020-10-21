@@ -7,9 +7,11 @@ int main() {
   cin.tie(nullptr);
   unordered_map<string, int> db;
   ostringstream oss;
-  array<int64_t, 100001> counter, dp;
+  constexpr int N = 100002;
+  auto counter = array<int64_t, N>{};
+  auto dp = array<int64_t, N>{};
 
-  int n;
+  int n = 0;
   cin >> n;
   vector<int> arr;
   arr.reserve(n);
@@ -27,10 +29,10 @@ int main() {
 
   dp[0] = 0;
   dp[1] = 0;
-  for (int i = 2; i < counter.size(); ++i) {
+  for (int64_t i = 2; i < counter.size(); ++i) {
     dp[i] = max(dp[i - 1], dp[i - 2] + counter[i - 1] * (i - 1));
   }
 
-  cout << dp[10000];
+  cout << dp[N - 1];
   return 0;
 }
