@@ -23,48 +23,42 @@ void zeroRemainderSum(const vector<vector<int64_t>>& mat, const int64_t div) {
     dp[0][0][0][0] = 0;
     for (int64_t row = 0; row < R; ++row) {
         /* loop up until the last column */
-        for (int64_t col = 0; col < C - 1; ++col) {
+        for (int64_t col = 0; col < C; ++col) {
             for (int64_t cnt = 0; cnt <= MAX_PICK; ++cnt) {
                 for (int64_t rem = 0; rem < div; ++rem) {
                     if (dp[row][col][cnt][rem] == -INF) {
                         continue;
                     }
                     /* Don't take the element at row, col */
-                    dp[row][col + 1][cnt][rem] =
-                            max(dp[row][col + 1][cnt][rem],  //
-                                dp[row][col][cnt][rem]);
-                    if (cnt + 1 <= MAX_PICK) {
-                        /* Take the element at row,col */
-                        int64_t nextRem = (rem + mat[row][col]) % div;
-                        dp[row][col + 1][cnt + 1][nextRem] =
-                                max(dp[row][col + 1][cnt + 1][nextRem],  //
-                                    dp[row][col][cnt][rem] + mat[row][col]);
+                    if (col < C - 1) {
+                        dp[row][col + 1][cnt][rem] =
+                                max(dp[row][col + 1][cnt][rem],  //
+                                    dp[row][col][cnt][rem]);
+                    } else {  // handle last column
+                        dp[row + 1][0][0][rem] =
+                                max(dp[row + 1][0][0][rem],  //
+                                    dp[row][C - 1][cnt][rem]);
                     }
-                }
-            }
-        }
-
-        /* handle last column */
-        for (int64_t cnt = 0; cnt <= MAX_PICK; ++cnt) {
-            for (int64_t rem = 0; rem < div; ++rem) {
-                /* Don't take the element at row, col */
-                dp[row + 1][0][0][rem] =
-                        max(dp[row + 1][0][0][rem],  //
-                            dp[row][C - 1][cnt][rem]);
-                int64_t nextRem = (rem + mat[row][C - 1]) % div;
-                if (cnt + 1 <= MAX_PICK) {
                     /* Take the element at row,col */
-                    dp[row + 1][0][0][nextRem] =
-                            max(dp[row][0][0][nextRem],  //
-                                dp[row][C - 1][cnt][rem] + mat[row][C - 1]);
+                    if (cnt + 1 <= MAX_PICK) {
+                        if (col < C - 1) {
+                            int64_t nextRem = (rem + mat[row][col]) % div;
+                            dp[row][col + 1][cnt + 1][nextRem] =
+                                    max(dp[row][col + 1][cnt + 1][nextRem],  //
+                                        dp[row][col][cnt][rem] + mat[row][col]);
+                        } else {
+                            int64_t nextRem = (rem + mat[row][C - 1]) % div;
+                            dp[row + 1][0][0][nextRem] =
+                                    max(dp[row + 1][0][0][nextRem],  //
+                                        dp[row][C - 1][cnt][rem] + mat[row][C - 1]);
+                        }
+                    }
                 }
             }
         }
     }
     int64_t maxSum = 0;
-    for (int64_t cnt = 0; cnt <= MAX_PICK; ++cnt) {
-        maxSum = max(maxSum, dp[R][0][cnt][0]);
-    }
+    maxSum = max(maxSum, dp[R][0][0][0]);
     cout << maxSum << '\n';
 }
 
