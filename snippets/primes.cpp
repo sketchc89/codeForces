@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-using i64 = int64_t;
 constexpr static size_t NUM_PRIMES = 1000001;
 
 namespace cf {
@@ -13,24 +12,29 @@ void sieve() {
     sieveArr.fill(true);
     sieveArr[0] = false;
     sieveArr[1] = false;
-    for (i64 i = 2; i < sieveArr.size(); ++i) {
+    for (int64_t i = 2; i < sieveArr.size(); ++i) {
         if (sieveArr[i]) {
-            for (i64 j = i * i; j < sieveArr.size(); j += i) {
+            for (int64_t j = i * i; j < sieveArr.size(); j += i) {
                 sieveArr[j] = false;
             }
         }
     }
 }
-void primeStats(i64 val, unordered_map<i64, i64>& count, map<i64, unordered_set<i64>>& freq, array<bool, NUM_PRIMES>& primes) {
-    for (i64 i = 2; i <= sqrt(val); ++i) {
-        if (!primes[i]) {
-            continue;
+void primeStats(
+        int64_t val,
+        unordered_map<int64_t, int64_t>& count,
+        map<int64_t, unordered_set<int64_t>>& freq,
+        array<bool, NUM_PRIMES>& primes) {
+    for (int64_t i = 2; i * i <= val; ++i) {
+        if (primes[i] && val % i == 0) {
+            while (val % i == 0) {
+                count[i]++;
+                val /= i;
+            }
         }
-        i64 temp = val;
-        while (temp % i == 0) {
-            temp /= i;
-            count[i]++;
-        }
+    }
+    if (val > 1) {
+        count[val]++;
     }
     for (auto&& kv : count) {
         freq[kv.second].insert(kv.first);
@@ -42,11 +46,11 @@ void primeStats(i64 val, unordered_map<i64, i64>& count, map<i64, unordered_set<
 
 int main() {
 
-    unordered_map<i64, i64> primeCount;
-    map<i64, unordered_set<i64>> primeFreq;
+    unordered_map<int64_t, int64_t> primeCount;
+    map<int64_t, unordered_set<int64_t>> primeFreq;
     cf::primes::sieve();
     cf::primes::primeStats(5428, primeCount, primeFreq, cf::primes::sieveArr);
-    for (i64 i = 0; i < cf::primes::sieveArr.size(); ++i) {
+    for (int64_t i = 0; i < cf::primes::sieveArr.size(); ++i) {
         if (cf::primes::sieveArr[i]) {
             cout << i << ' ';
         }
