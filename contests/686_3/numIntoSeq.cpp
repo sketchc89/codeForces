@@ -20,30 +20,20 @@ void sieve() {
 }
 
 void factorize(int64_t val) {
-    for (int64_t i = 2; i <= sqrt(val); ++i) {
+    for (int64_t i = 2; i * i <= val; ++i) {
         if (primes[i] && val % i == 0) {
-            int64_t temp = val;
-            while (temp % i == 0) {
+            while (val % i == 0) {
                 primeCount[i]++;
-                temp /= i;
+                val /= i;
             }
         }
+    }
+    if (val > 1) {
+        primeCount[val]++;
     }
     for (auto&& kv : primeCount) {
         primeFreq[kv.second].insert(kv.first);
     }
-    // cout << "\nFactorize " << val << ":\t";
-    // for (auto&& kv : primeCount) {
-    //     cout << kv.first << ':' << kv.second << '\t';
-    // }
-    // cout << '\n';
-    // for (auto&& kv : primeFreq) {
-    //     cout << "Freqency " << kv.first << ":\t";
-    //     for (auto num : kv.second) {
-    //         cout << num << ',';
-    //     }
-    //     cout << '\n';
-    // }
 }
 
 int main() {
@@ -57,7 +47,6 @@ int main() {
         primeCount.clear();
         primeFreq.clear();
         factorize(val);
-        vector<int64_t> res;
         int64_t freq = -1;
         int64_t factor = 1;
         if (primeCount.size() == 0) {
@@ -71,13 +60,16 @@ int main() {
                 continue;
             }
         }
+        auto sz = primeFreq.begin()->first;
+        vector<int64_t> res(sz, 1);
+
         for (auto it = primeFreq.begin(); it != primeFreq.end(); ++it) {
-            int64_t cnt = next(it) == primeFreq.end() ? it->first : it->first - next(it)->first;
+            int64_t factor = 1;
             for (auto num : it->second) {
                 factor *= num;
             }
-            for (int64_t n = 0; n < cnt; ++n) {
-                res.push_back(factor);
+            for (int64_t n = 0; n < it->first; ++n) {
+                res[sz - 1 - n] *= factor;
             }
         }
         vi[test] = res;
