@@ -11,16 +11,26 @@ int main() {
     for (int64_t test = 0; test < tests; ++test) {
         int64_t boxes;
         cin >> boxes;
-        vector<int64_t> blocks(boxes);
         int64_t sum = 0;
         int64_t maxElem = 0;
+        int64_t block;
         for (int box = 0; box < boxes; ++box) {
-            cin >> blocks[box];
-            sum += blocks[box];
-            maxElem = max(maxElem, blocks[box]);
+            cin >> block;
+            sum += block;
+            maxElem = max(maxElem, block);
         }
-        int64_t rem = sum % (boxes - 1);
-        vi[test] = max(rem, maxElem);
+        if (boxes == 2) {
+            vi[test] = 0;
+            continue;
+        }
+        int64_t origSum = sum;
+        if (sum / (boxes - 1) < maxElem) {
+            sum = maxElem * (boxes - 1);
+        }
+        while (sum % (boxes - 1) != 0) {
+            ++sum;
+        }
+        vi[test] = sum - origSum;
     }
     for (auto num : vi) {
         cout << num << '\n';
