@@ -35,9 +35,9 @@ int main() {
             // be the current time commands[i].first + the distance to the new target.
             // Otherwise update the current position to be the time difference since the last command in the direction of the target
             // position
-            int currTarget = commands[i].second;
-            int timeCurrCommand = commands[i].first;
-            int timeNextCommand = i == commands.size() - 1 ? INT32_MAX : commands[i + 1].first;
+            int64_t currTarget = commands[i].second;
+            int64_t timeCurrCommand = commands[i].first;
+            int64_t timeNextCommand = i == commands.size() - 1 ? INT64_MAX : commands[i + 1].first;
             if (timeCurrCommand >= timeEnd) {
                 // cout << "Stopped\t";
                 currPos = targetPos;
@@ -64,9 +64,9 @@ int main() {
                 }
             }
 
-            // cout << "Time: " << setw(5) << timeCurrCommand << "\tPosition: " << setw(5) << currPos << "\t";
-            // cout << "Robot target:   " << setw(5) << targetPos << "\t";
-            // cout << "Command target: " << setw(5) << currTarget << "\t";
+            // cout << "Time: " << setw(9) << timeCurrCommand << "\tPosition: " << setw(9) << currPos << "\t";
+            // cout << "Robot target:   " << setw(9) << targetPos << "\t";
+            // cout << "Command target: " << setw(9) << currTarget << "\t";
 
             // if the target and the current position match then the command is successful
             if (targetPos - currPos == 0) {
