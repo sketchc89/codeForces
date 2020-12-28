@@ -15,12 +15,14 @@ int main() {
         for (int i = 0; i < ground.size(); ++i) {
             cin >> ground[i];
         }
+        /* Fence starts on the ground */
         int64_t lowestPossible = ground[0];
         int64_t highestPossible = ground[0];
         bool possible = true;
-        // cout << string(30, '-') << '\n';
-        // cout << "FENCE: " << test << '\n';
-        // cout << string(30, '-') << '\n';
+
+        /* for each new fence post the range of allowable starting heights expands by height of fence - 1
+         * this is constraned on the bottom by the ground and the top by ground + height of fence - 1
+         * first calculate the allowed range, then add the constraints */
         for (int i = 1; i < ground.size(); ++i) {
             lowestPossible = lowestPossible - (h - 1);
             highestPossible = highestPossible + (h - 1);
@@ -40,11 +42,8 @@ int main() {
             } else {
                 highestPossible = min(highestPossible, ground[i] + (h - 1));
             }
-            // cout << "Width = " << i << '\t';
-            // cout << "lowestPossible: " << lowestPossible << '\t';
-            // cout << "highestPossible: " << highestPossible << '\t';
-            // cout << '\n';
         }
+        /* Check that the ground of the last post is within the range of the second to last post */
         if (possible && ground[numPosts - 1] <= highestPossible && ground[numPosts - 1] >= lowestPossible) {
             res[test] = "YES";
         } else {
